@@ -2,15 +2,13 @@
 % Please edit documentation in R/trophicFit.R
 \name{trophicFit}
 \alias{trophicFit}
-\title{Fitting models for functional responses using Bayesian inference}
+\title{Function to fit Holling models}
 \usage{
-trophicFit(x, ...)
+trophicFit(data, trophic_model = NULL, ...)
 }
 \arguments{
-\item{x}{an object used to select a method}
-
-\item{\dots}{Further arguments to be passed to generic methods}
+\item{data}{an object used to select a method}
 }
 \description{
-Fitting functional reponses using Bayesian inference for objects.
+Estimate Bayesian Holling type 2 or 3 model using Stan
 }
