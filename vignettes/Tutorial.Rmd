@@ -1,0 +1,173 @@
+---
+title: "Introduction to the trophicR Package"
+author: "Virgile Baudrot"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This vignette is a tutorial to help the use of the trophicR package.
+trophicR is dedicated to the Bayesian estimate of functional resonse with one
+or several prey species.
+
+```{r}
+library(trophicR)
+library(ggplot2)
+library(dplyr)
+library(rstan)
+```
+
+# A first simple example
+
+```{r H2testData}
+ data("data_H2test")
+```
+
+```{r}
+plt_H2test <- ggplot() + theme_light() +
+  labs(x = "prey available", y = "prey ingested") +
+  geom_point(aes(x = data_H2test$N_avail, y = data_H2test$N_diet))
+plt_H2test
+```
+
+```{r H2testFit}
+fit_H2test <- trophicFit_H2test(data = data_H2test)
+```
+
+
+```{r}
+result_H2test <- extract(fit_H2test, pars = c('a', 'h', 'phi'))
+phi_q50 <- apply(result_H2test$phi, 2, quantile, probs = 0.5, na.rm = TRUE)
+phi_qinf95 <- apply(result_H2test$phi, 2, quantile, probs = 0.025, na.rm = TRUE)
+phi_qsup95 <- apply(result_H2test$phi, 2, quantile, probs = 0.975, na.rm = TRUE)
+
+plt_H2test + geom_point(aes(x = data_H2test$N_avail, y = phi_q50), color="red") +
+  geom_errorbar(aes(x = data_H2test$N_avail, ymin = phi_qinf95, ymax = phi_qsup95), color="pink") + 
+  geom_ribbon(aes(x = data_H2test$N_avail, ymin = phi_qinf95, ymax = phi_qsup95), fill="pink", alpha = 0.3)
+```
+
+
+# Fox predation on voles
+
+```{r foxData}
+data("fox_Raoul2010")
+
+# plot of the data set
+df_fox <- data.frame(density = c(fox_Raoul2010$N_avail[,1], fox_Raoul2010$N_avail[,2]),
+                     diet = c(fox_Raoul2010$N_diet[,1], fox_Raoul2010$N_diet[,2] ),
+                     nFaeces = rep(fox_Raoul2010$nFaeces, 2),
+                     species = c(rep("Arvicola scherman",41), rep("Microtus arvalis", 41)))
+
+plt_foxData <- ggplot(data = df_fox) + theme_light() +
+  labs(x = "prey available", y = "proportion of prey ingested") +
+  geom_point(aes(x = density, y = diet/nFaeces, group = species)) +
+  facet_wrap(~ species)
+plt_foxData
+```
+
+## Holling type 2
+
+```{r foxFitH2}
+fit_foxH2 <- trophicFit(data = fox_Raoul2010, trophic_model = "holling2")
+```
+
+
+```{r foxResultH2}
+# Extract results
+result_foxH2 <- extract(fit_foxH2, pars = c('a', 'h', 'phi', 'rep'))
+
+df_foxH2 <- df_fox
+df_foxH2$rep_q50 <- c(apply(result_foxH2$rep[,,1], 2, quantile, probs = 0.5, na.rm = TRUE),
+                      apply(result_foxH2$rep[,,2], 2, quantile, probs = 0.5, na.rm = TRUE))
+df_foxH2$rep_qinf95 <- c(apply(result_foxH2$rep[,,1], 2, quantile, probs = 0.025, na.rm = TRUE),
+                         apply(result_foxH2$rep[,,2], 2, quantile, probs = 0.025, na.rm = TRUE))
+df_foxH2$rep_qsup95 <- c(apply(result_foxH2$rep[,,1], 2, quantile, probs = 0.975, na.rm = TRUE),
+                         apply(result_foxH2$rep[,,2], 2, quantile, probs = 0.975, na.rm = TRUE))
+
+# plot results
+ggplot(data = df_foxH2) + theme_light() +
+  labs(x = "prey available", y = "proportion of prey ingested") +
+  geom_point(aes(x = density, y = diet, group = species)) +
+  #geom_errorbar(aes(x = density, ymin = rep_qinf95, ymax = rep_qsup95, group= species), color="pink", alpha = 0.3) +
+  geom_point(aes(x = density, y = rep_q50, group = species), color="red") +
+  facet_wrap(~ species)
+```
+
+```{r foxPredictH2}
+aA <- result_foxH2$a[,1]
+aM <- result_foxH2$a[,2]
+hA <- result_foxH2$h[,1]
+hM <- result_foxH2$h[,2]
+
+#
+# Attention, seul un graph en 3D est pertinent ! Here we fix other density at 10 !!!
+#
+
+dens <- expand.grid(A = seq(0,100,length.out = 50),
+                    M = seq(0,100,length.out = 50))
+
+phiA <- aA %*% t(dens$A) / (1 + (aA * hA) %*% t(dens$A) + (aM * hM) %*% t(dens$M))
+phiM <- aM %*% t(dens$M) / (1 + (aA * hA) %*% t(dens$A) + (aM * hM) %*% t(dens$M))
+
+df_foxH2pred <- data.frame(densA = dens$A,
+                           densM = dens$M,
+                           phiA_q50 = apply(phiA, 2, quantile, probs = 0.5),
+                           phiM_q50 = apply(phiM, 2, quantile, probs = 0.5),
+                           phiA_qinf95 = apply(phiA, 2, quantile, probs = 0.025),
+                           phiM_qinf95 = apply(phiM, 2, quantile, probs = 0.025),
+                           phiA_qsup95 = apply(phiA, 2, quantile, probs = 0.975),
+                           phiM_qsup95 = apply(phiM, 2, quantile, probs = 0.975))
+
+
+#
+# GRAPHIQUE 3D
+#
+
+```
+
+## Holling type 3
+
+```{r foxFitH3}
+fit_foxH3 <- trophicFit(data = fox_Raoul2010, trophic_model = "holling3")
+```
+
+```{r foxResultH3}
+# Extract results
+result_foxH3 <- extract(fit_foxH3, pars = c('a', 'h', 'm', 'phi', 'rep'))
+
+df_foxH3 <- df_fox
+df_foxH3$rep_q50 <- c(apply(result_foxH3$rep[,,1], 2, quantile, probs = 0.5, na.rm = TRUE),
+                      apply(result_foxH3$rep[,,2], 2, quantile, probs = 0.5, na.rm = TRUE))
+df_foxH3$rep_qinf95 <- c(apply(result_foxH3$rep[,,1], 2, quantile, probs = 0.025, na.rm = TRUE),
+                         apply(result_foxH3$rep[,,2], 2, quantile, probs = 0.025, na.rm = TRUE))
+df_foxH3$rep_qsup95 <- c(apply(result_foxH3$rep[,,1], 2, quantile, probs = 0.975, na.rm = TRUE),
+                         apply(result_foxH3$rep[,,2], 2, quantile, probs = 0.975, na.rm = TRUE))
+
+# plot results
+ggplot(data = df_foxH3) + theme_light() +
+  labs(x = "prey available", y = "proportion of prey ingested") +
+  geom_point(aes(x = density, y = diet, group = species)) +
+  #geom_errorbar(aes(x = density, ymin = rep_qinf95, ymax = rep_qsup95, group= species), color="pink", alpha = 0.3) +
+  geom_point(aes(x = density, y = rep_q50, group = species), color="red") +
+  facet_wrap(~ species)
+```
+
+```{r foxPredictH3}
+aA <- result_foxH3$a[,1]
+aM <- result_foxH3$a[,2]
+hA <- result_foxH3$h[,1]
+hM <- result_foxH3$h[,2]
+mA <- result_foxH3$m[,1]
+mM <- result_foxH3$m[,2]
+
+dens <- seq(0, 100, length.out=100)
+
+predict_holling3 <- function(x, a, h, m){
+  # x is a vector
+  # a, h, m are scalars
+  return( a * x^m / (1+ a *h * x^m + a *h * x^m ) )
+}
+```
