@@ -41,7 +41,7 @@ please let us know by [filing an issue](https://github.com/virgile-baudrot/troph
 
 ## Starting with trophicR
 
-Once the package **trophicR** is installed in your environment, try to estimate an classical Holling type 2 functional response.
+Once the package **trophicR** is installed in your environment, try to estimate a classical Holling type 2 functional response.
 
 1. load the library
 ```r
@@ -50,7 +50,7 @@ library(trophicR)
 
 2. load the data set, and then a plot (using the library **ggplot2**)
 
-The data set is totally explained in [Raoul et al. (2010)](https://link.springer.com/article/10.1007/s00442-010-1647-8) and was use in our common paper [Baudrot et al. (2016)](http://onlinelibrary.wiley.com/doi/10.1890/15-0427.1/full)
+The data set is totally explained in [Raoul et al. (2010)](https://link.springer.com/article/10.1007/s00442-010-1647-8) and was use in our common paper [Baudrot et al. (2016)](http://onlinelibrary.wiley.com/doi/10.1890/15-0427.1/full).
 
 *Raoul, F.; Deplazes, P.; Rieffel, D.; Lambert, J.-C. & Giraudoux, P. Predator dietary response to prey density variation and consequences for cestode transmission. Oecologia, Springer, 2010, 164, 129-139*
 
