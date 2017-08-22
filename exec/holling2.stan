@@ -3,29 +3,27 @@ data {
   int<lower=1> nSpecies; // number of species
   int<lower=0> nFaeces[nData]; // number of faeces or pellet
   
-  int spID[nData]; // identification of species
-  int spID_posmin[nSpecies]; //
-  int spID_posmax[nSpecies];
-
   // prey available (e.g. densities of populations)
-  real N_avail[nData, nSpecies]; // Number of individual ingested
+  matrix[nData, nSpecies] N_avail; // Number of individual ingested
 
   // prey ingested (e.g. measure of prey in diet)
   int N_diet[nData, nSpecies]; // Number of individual ingested
 
 }
 parameters {
-  real a[nSpecies]; // attack rate
-  real h[nSpecies]; // handling time
+  row_vector[nSpecies] a; // attack rate
+  row_vector[nSpecies] h; // handling time
   
   real<lower=0> sigma;
 }
 transformed parameters{
-  real<lower=0> phi[nData, nSpecies];
+  matrix[nData, nSpecies] phi;
 
   for(i in 1:nData){
     for(j in 1:nSpecies){
-    phi[i, j] = a[j] * N_avail[i,j] / (1 +  a[j] * h[j] * sum(N_avail[i,1:nSpecies]) ) ;
+      //sum_avail[i,j] = a[j] * h[j] * N_avail[i,j];
+      //phi[i, j] = a[j] * N_avail[i,j] / (1 + sum(sum_avail[i,1:nSpecies]));
+      phi[i, j] = a[j] * N_avail[i,j] / (1 +  sum(a .* h .* N_avail[i] ));
     }
   }
 }
