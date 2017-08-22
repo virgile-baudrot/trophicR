@@ -49,7 +49,6 @@ plt_H2test + geom_point(aes(x = data_H2test$N_avail, y = phi_q50), color="red") 
   geom_ribbon(aes(x = data_H2test$N_avail, ymin = phi_qinf95, ymax = phi_qsup95), fill="pink", alpha = 0.3)
 ```
 
-
 # Fox predation on voles
 
 ```{r foxData}
@@ -106,8 +105,8 @@ hM <- result_foxH2$h[,2]
 # Attention, seul un graph en 3D est pertinent ! Here we fix other density at 10 !!!
 #
 
-dens <- expand.grid(A = seq(0,100,length.out = 50),
-                    M = seq(0,100,length.out = 50))
+dens <- expand.grid(A = seq(1,100,length.out = 12),
+                    M = seq(1,100,length.out = 12))
 
 phiA <- aA %*% t(dens$A) / (1 + (aA * hA) %*% t(dens$A) + (aM * hM) %*% t(dens$M))
 phiM <- aM %*% t(dens$M) / (1 + (aA * hA) %*% t(dens$A) + (aM * hM) %*% t(dens$M))
@@ -121,10 +120,17 @@ df_foxH2pred <- data.frame(densA = dens$A,
                            phiA_qsup95 = apply(phiA, 2, quantile, probs = 0.975),
                            phiM_qsup95 = apply(phiM, 2, quantile, probs = 0.975))
 
+#
+# GRAPHIQUE 2D for a 3D data set...
+#
 
-#
-# GRAPHIQUE 3D
-#
+ggplot(data = df_foxH2pred) + theme_light() +
+  labs(x = "prey available", y = "proportion of prey ingested",
+       title ="Ingestion rate of Microtus arvalis depending of its density.\n Panel corresond to different density of Arvicola scherman") +
+  geom_ribbon(aes(x = densM,
+                  ymin = phiM_qinf95, ymax = phiM_qsup95), fill="pink", alpha = 0.3) +
+  geom_line(aes(x = densM, y = phiM_q50), color="red") +
+  facet_wrap(~ densA, ncol=4)
 
 ```
 
