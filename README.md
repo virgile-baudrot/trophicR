@@ -49,6 +49,13 @@ library(trophicR)
 ```
 
 2. load the data set, and then a plot (using the library **ggplot2**)
+
+The data set is totally explained in [Raoul et al. (2010)](https://link.springer.com/article/10.1007/s00442-010-1647-8) and was use in our common paper [Baudrot et al. (2016)](http://onlinelibrary.wiley.com/doi/10.1890/15-0427.1/full)
+
+*Raoul, F.; Deplazes, P.; Rieffel, D.; Lambert, J.-C. & Giraudoux, P. Predator dietary response to prey density variation and consequences for cestode transmission. Oecologia, Springer, 2010, 164, 129-139*
+
+*Baudrot, V.; Perasso, A.; Fritsch, C.; Giraudoux, P. & Raoul, F. The adaptation of generalist predators diet in a multi-prey context: insights from new functional responses. Ecology, 2016, 97, 1832-1841*
+
 ```r
 data("fox_Raoul2010")
 
