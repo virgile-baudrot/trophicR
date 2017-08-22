@@ -7,6 +7,479 @@
 
 #include <stan/model/model_header.hpp>
 
+namespace model_H2test_namespace {
+
+using std::istream;
+using std::string;
+using std::stringstream;
+using std::vector;
+using stan::io::dump;
+using stan::math::lgamma;
+using stan::model::prob_grad;
+using namespace stan::math;
+
+typedef Eigen::Matrix<double,Eigen::Dynamic,1> vector_d;
+typedef Eigen::Matrix<double,1,Eigen::Dynamic> row_vector_d;
+typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> matrix_d;
+
+static int current_statement_begin__;
+
+stan::io::program_reader prog_reader__() {
+    stan::io::program_reader reader;
+    reader.add_event(0, 0, "start", "model_H2test");
+    reader.add_event(32, 32, "end", "model_H2test");
+    return reader;
+}
+
+class model_H2test : public prob_grad {
+private:
+    int nData;
+    vector<int> nFaeces;
+    vector<double> N_avail;
+    vector<int> N_diet;
+public:
+    model_H2test(stan::io::var_context& context__,
+        std::ostream* pstream__ = 0)
+        : prob_grad(0) {
+        ctor_body(context__, 0, pstream__);
+    }
+
+    model_H2test(stan::io::var_context& context__,
+        unsigned int random_seed__,
+        std::ostream* pstream__ = 0)
+        : prob_grad(0) {
+        ctor_body(context__, random_seed__, pstream__);
+    }
+
+    void ctor_body(stan::io::var_context& context__,
+                   unsigned int random_seed__,
+                   std::ostream* pstream__) {
+        boost::ecuyer1988 base_rng__ =
+          stan::services::util::create_rng(random_seed__, 0);
+        (void) base_rng__;  // suppress unused var warning
+
+        current_statement_begin__ = -1;
+
+        static const char* function__ = "model_H2test_namespace::model_H2test";
+        (void) function__;  // dummy to suppress unused var warning
+        size_t pos__;
+        (void) pos__;  // dummy to suppress unused var warning
+        std::vector<int> vals_i__;
+        std::vector<double> vals_r__;
+        double DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+        (void) DUMMY_VAR__;  // suppress unused var warning
+
+        // initialize member variables
+        context__.validate_dims("data initialization", "nData", "int", context__.to_vec());
+        nData = int(0);
+        vals_i__ = context__.vals_i("nData");
+        pos__ = 0;
+        nData = vals_i__[pos__++];
+        validate_non_negative_index("nFaeces", "nData", nData);
+        context__.validate_dims("data initialization", "nFaeces", "int", context__.to_vec(nData));
+        validate_non_negative_index("nFaeces", "nData", nData);
+        nFaeces = std::vector<int>(nData,int(0));
+        vals_i__ = context__.vals_i("nFaeces");
+        pos__ = 0;
+        size_t nFaeces_limit_0__ = nData;
+        for (size_t i_0__ = 0; i_0__ < nFaeces_limit_0__; ++i_0__) {
+            nFaeces[i_0__] = vals_i__[pos__++];
+        }
+        validate_non_negative_index("N_avail", "nData", nData);
+        context__.validate_dims("data initialization", "N_avail", "double", context__.to_vec(nData));
+        validate_non_negative_index("N_avail", "nData", nData);
+        N_avail = std::vector<double>(nData,double(0));
+        vals_r__ = context__.vals_r("N_avail");
+        pos__ = 0;
+        size_t N_avail_limit_0__ = nData;
+        for (size_t i_0__ = 0; i_0__ < N_avail_limit_0__; ++i_0__) {
+            N_avail[i_0__] = vals_r__[pos__++];
+        }
+        validate_non_negative_index("N_diet", "nData", nData);
+        context__.validate_dims("data initialization", "N_diet", "int", context__.to_vec(nData));
+        validate_non_negative_index("N_diet", "nData", nData);
+        N_diet = std::vector<int>(nData,int(0));
+        vals_i__ = context__.vals_i("N_diet");
+        pos__ = 0;
+        size_t N_diet_limit_0__ = nData;
+        for (size_t i_0__ = 0; i_0__ < N_diet_limit_0__; ++i_0__) {
+            N_diet[i_0__] = vals_i__[pos__++];
+        }
+
+        // validate, data variables
+        check_greater_or_equal(function__,"nData",nData,1);
+        for (int k0__ = 0; k0__ < nData; ++k0__) {
+            check_greater_or_equal(function__,"nFaeces[k0__]",nFaeces[k0__],0);
+        }
+        // initialize data variables
+
+        try {
+        } catch (const std::exception& e) {
+            stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+            // Next line prevents compiler griping about no return
+            throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+        }
+
+        // validate transformed data
+
+        // validate, set parameter ranges
+        num_params_r__ = 0U;
+        param_ranges_i__.clear();
+        ++num_params_r__;
+        ++num_params_r__;
+        ++num_params_r__;
+    }
+
+    ~model_H2test() { }
+
+
+    void transform_inits(const stan::io::var_context& context__,
+                         std::vector<int>& params_i__,
+                         std::vector<double>& params_r__,
+                         std::ostream* pstream__) const {
+        stan::io::writer<double> writer__(params_r__,params_i__);
+        size_t pos__;
+        (void) pos__; // dummy call to supress warning
+        std::vector<double> vals_r__;
+        std::vector<int> vals_i__;
+
+        if (!(context__.contains_r("a")))
+            throw std::runtime_error("variable a missing");
+        vals_r__ = context__.vals_r("a");
+        pos__ = 0U;
+        context__.validate_dims("initialization", "a", "double", context__.to_vec());
+        // generate_declaration a
+        double a(0);
+        a = vals_r__[pos__++];
+        try {
+            writer__.scalar_unconstrain(a);
+        } catch (const std::exception& e) { 
+            throw std::runtime_error(std::string("Error transforming variable a: ") + e.what());
+        }
+
+        if (!(context__.contains_r("h")))
+            throw std::runtime_error("variable h missing");
+        vals_r__ = context__.vals_r("h");
+        pos__ = 0U;
+        context__.validate_dims("initialization", "h", "double", context__.to_vec());
+        // generate_declaration h
+        double h(0);
+        h = vals_r__[pos__++];
+        try {
+            writer__.scalar_unconstrain(h);
+        } catch (const std::exception& e) { 
+            throw std::runtime_error(std::string("Error transforming variable h: ") + e.what());
+        }
+
+        if (!(context__.contains_r("sigma")))
+            throw std::runtime_error("variable sigma missing");
+        vals_r__ = context__.vals_r("sigma");
+        pos__ = 0U;
+        context__.validate_dims("initialization", "sigma", "double", context__.to_vec());
+        // generate_declaration sigma
+        double sigma(0);
+        sigma = vals_r__[pos__++];
+        try {
+            writer__.scalar_lb_unconstrain(0,sigma);
+        } catch (const std::exception& e) { 
+            throw std::runtime_error(std::string("Error transforming variable sigma: ") + e.what());
+        }
+
+        params_r__ = writer__.data_r();
+        params_i__ = writer__.data_i();
+    }
+
+    void transform_inits(const stan::io::var_context& context,
+                         Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                         std::ostream* pstream__) const {
+      std::vector<double> params_r_vec;
+      std::vector<int> params_i_vec;
+      transform_inits(context, params_i_vec, params_r_vec, pstream__);
+      params_r.resize(params_r_vec.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r(i) = params_r_vec[i];
+    }
+
+
+    template <bool propto__, bool jacobian__, typename T__>
+    T__ log_prob(vector<T__>& params_r__,
+                 vector<int>& params_i__,
+                 std::ostream* pstream__ = 0) const {
+
+        T__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+        (void) DUMMY_VAR__;  // suppress unused var warning
+
+        T__ lp__(0.0);
+        stan::math::accumulator<T__> lp_accum__;
+
+        // model parameters
+        stan::io::reader<T__> in__(params_r__,params_i__);
+
+        T__ a;
+        (void) a;  // dummy to suppress unused var warning
+        if (jacobian__)
+            a = in__.scalar_constrain(lp__);
+        else
+            a = in__.scalar_constrain();
+
+        T__ h;
+        (void) h;  // dummy to suppress unused var warning
+        if (jacobian__)
+            h = in__.scalar_constrain(lp__);
+        else
+            h = in__.scalar_constrain();
+
+        T__ sigma;
+        (void) sigma;  // dummy to suppress unused var warning
+        if (jacobian__)
+            sigma = in__.scalar_lb_constrain(0,lp__);
+        else
+            sigma = in__.scalar_lb_constrain(0);
+
+
+        // transformed parameters
+        validate_non_negative_index("phi", "nData", nData);
+        vector<T__> phi(nData);
+        stan::math::initialize(phi, DUMMY_VAR__);
+        stan::math::fill(phi,DUMMY_VAR__);
+
+
+        try {
+            for (int i = 1; i <= nData; ++i) {
+
+                stan::math::assign(get_base1_lhs(phi,i,"phi",1), ((a * get_base1(N_avail,i,"N_avail",1)) / (1 + ((a * h) * get_base1(N_avail,i,"N_avail",1)))));
+            }
+        } catch (const std::exception& e) {
+            stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+            // Next line prevents compiler griping about no return
+            throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+        }
+
+        // validate transformed parameters
+        for (int i0__ = 0; i0__ < nData; ++i0__) {
+            if (stan::math::is_uninitialized(phi[i0__])) {
+                std::stringstream msg__;
+                msg__ << "Undefined transformed parameter: phi" << '[' << i0__ << ']';
+                throw std::runtime_error(msg__.str());
+            }
+        }
+
+        const char* function__ = "validate transformed params";
+        (void) function__;  // dummy to suppress unused var warning
+        for (int k0__ = 0; k0__ < nData; ++k0__) {
+            check_greater_or_equal(function__,"phi[k0__]",phi[k0__],0);
+        }
+
+        // model body
+        try {
+
+            lp_accum__.add(gamma_log<propto__>(a, 1, 1));
+            lp_accum__.add(gamma_log<propto__>(h, 1, 1));
+            for (int i = 1; i <= nData; ++i) {
+
+                lp_accum__.add(neg_binomial_2_log<propto__>(get_base1(N_diet,i,"N_diet",1), (get_base1(nFaeces,i,"nFaeces",1) * get_base1(phi,i,"phi",1)), sigma));
+            }
+        } catch (const std::exception& e) {
+            stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+            // Next line prevents compiler griping about no return
+            throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+        }
+
+        lp_accum__.add(lp__);
+        return lp_accum__.sum();
+
+    } // log_prob()
+
+    template <bool propto, bool jacobian, typename T_>
+    T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+               std::ostream* pstream = 0) const {
+      std::vector<T_> vec_params_r;
+      vec_params_r.reserve(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        vec_params_r.push_back(params_r(i));
+      std::vector<int> vec_params_i;
+      return log_prob<propto,jacobian,T_>(vec_params_r, vec_params_i, pstream);
+    }
+
+
+    void get_param_names(std::vector<std::string>& names__) const {
+        names__.resize(0);
+        names__.push_back("a");
+        names__.push_back("h");
+        names__.push_back("sigma");
+        names__.push_back("phi");
+    }
+
+
+    void get_dims(std::vector<std::vector<size_t> >& dimss__) const {
+        dimss__.resize(0);
+        std::vector<size_t> dims__;
+        dims__.resize(0);
+        dimss__.push_back(dims__);
+        dims__.resize(0);
+        dimss__.push_back(dims__);
+        dims__.resize(0);
+        dimss__.push_back(dims__);
+        dims__.resize(0);
+        dims__.push_back(nData);
+        dimss__.push_back(dims__);
+    }
+
+    template <typename RNG>
+    void write_array(RNG& base_rng__,
+                     std::vector<double>& params_r__,
+                     std::vector<int>& params_i__,
+                     std::vector<double>& vars__,
+                     bool include_tparams__ = true,
+                     bool include_gqs__ = true,
+                     std::ostream* pstream__ = 0) const {
+        vars__.resize(0);
+        stan::io::reader<double> in__(params_r__,params_i__);
+        static const char* function__ = "model_H2test_namespace::write_array";
+        (void) function__;  // dummy to suppress unused var warning
+        // read-transform, write parameters
+        double a = in__.scalar_constrain();
+        double h = in__.scalar_constrain();
+        double sigma = in__.scalar_lb_constrain(0);
+        vars__.push_back(a);
+        vars__.push_back(h);
+        vars__.push_back(sigma);
+
+        if (!include_tparams__) return;
+        // declare and define transformed parameters
+        double lp__ = 0.0;
+        (void) lp__;  // dummy to suppress unused var warning
+        stan::math::accumulator<double> lp_accum__;
+
+        double DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+        (void) DUMMY_VAR__;  // suppress unused var warning
+
+        validate_non_negative_index("phi", "nData", nData);
+        vector<double> phi(nData, 0.0);
+        stan::math::initialize(phi, std::numeric_limits<double>::quiet_NaN());
+        stan::math::fill(phi,DUMMY_VAR__);
+
+
+        try {
+            for (int i = 1; i <= nData; ++i) {
+
+                stan::math::assign(get_base1_lhs(phi,i,"phi",1), ((a * get_base1(N_avail,i,"N_avail",1)) / (1 + ((a * h) * get_base1(N_avail,i,"N_avail",1)))));
+            }
+        } catch (const std::exception& e) {
+            stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+            // Next line prevents compiler griping about no return
+            throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+        }
+
+        // validate transformed parameters
+        for (int k0__ = 0; k0__ < nData; ++k0__) {
+            check_greater_or_equal(function__,"phi[k0__]",phi[k0__],0);
+        }
+
+        // write transformed parameters
+        for (int k_0__ = 0; k_0__ < nData; ++k_0__) {
+            vars__.push_back(phi[k_0__]);
+        }
+
+        if (!include_gqs__) return;
+        // declare and define generated quantities
+
+
+        try {
+        } catch (const std::exception& e) {
+            stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+            // Next line prevents compiler griping about no return
+            throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+        }
+
+        // validate generated quantities
+
+        // write generated quantities
+    }
+
+    template <typename RNG>
+    void write_array(RNG& base_rng,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                     bool include_tparams = true,
+                     bool include_gqs = true,
+                     std::ostream* pstream = 0) const {
+      std::vector<double> params_r_vec(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r_vec[i] = params_r(i);
+      std::vector<double> vars_vec;
+      std::vector<int> params_i_vec;
+      write_array(base_rng,params_r_vec,params_i_vec,vars_vec,include_tparams,include_gqs,pstream);
+      vars.resize(vars_vec.size());
+      for (int i = 0; i < vars.size(); ++i)
+        vars(i) = vars_vec[i];
+    }
+
+    static std::string model_name() {
+        return "model_H2test";
+    }
+
+
+    void constrained_param_names(std::vector<std::string>& param_names__,
+                                 bool include_tparams__ = true,
+                                 bool include_gqs__ = true) const {
+        std::stringstream param_name_stream__;
+        param_name_stream__.str(std::string());
+        param_name_stream__ << "a";
+        param_names__.push_back(param_name_stream__.str());
+        param_name_stream__.str(std::string());
+        param_name_stream__ << "h";
+        param_names__.push_back(param_name_stream__.str());
+        param_name_stream__.str(std::string());
+        param_name_stream__ << "sigma";
+        param_names__.push_back(param_name_stream__.str());
+
+        if (!include_gqs__ && !include_tparams__) return;
+        for (int k_0__ = 1; k_0__ <= nData; ++k_0__) {
+            param_name_stream__.str(std::string());
+            param_name_stream__ << "phi" << '.' << k_0__;
+            param_names__.push_back(param_name_stream__.str());
+        }
+
+        if (!include_gqs__) return;
+    }
+
+
+    void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                   bool include_tparams__ = true,
+                                   bool include_gqs__ = true) const {
+        std::stringstream param_name_stream__;
+        param_name_stream__.str(std::string());
+        param_name_stream__ << "a";
+        param_names__.push_back(param_name_stream__.str());
+        param_name_stream__.str(std::string());
+        param_name_stream__ << "h";
+        param_names__.push_back(param_name_stream__.str());
+        param_name_stream__.str(std::string());
+        param_name_stream__ << "sigma";
+        param_names__.push_back(param_name_stream__.str());
+
+        if (!include_gqs__ && !include_tparams__) return;
+        for (int k_0__ = 1; k_0__ <= nData; ++k_0__) {
+            param_name_stream__.str(std::string());
+            param_name_stream__ << "phi" << '.' << k_0__;
+            param_names__.push_back(param_name_stream__.str());
+        }
+
+        if (!include_gqs__) return;
+    }
+
+}; // model
+
+}
+
+
+
+
+// Code generated by Stan version 2.16.0
+
+#include <stan/model/model_header.hpp>
+
 namespace model_holling2_namespace {
 
 using std::istream;
@@ -27,7 +500,7 @@ static int current_statement_begin__;
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
     reader.add_event(0, 0, "start", "model_holling2");
-    reader.add_event(52, 52, "end", "model_holling2");
+    reader.add_event(50, 50, "end", "model_holling2");
     return reader;
 }
 
@@ -36,10 +509,7 @@ private:
     int nData;
     int nSpecies;
     vector<int> nFaeces;
-    vector<int> spID;
-    vector<int> spID_posmin;
-    vector<int> spID_posmax;
-    vector<vector<double> > N_avail;
+    matrix_d N_avail;
     vector<vector<int> > N_diet;
 public:
     model_holling2(stan::io::var_context& context__,
@@ -94,49 +564,19 @@ public:
         for (size_t i_0__ = 0; i_0__ < nFaeces_limit_0__; ++i_0__) {
             nFaeces[i_0__] = vals_i__[pos__++];
         }
-        validate_non_negative_index("spID", "nData", nData);
-        context__.validate_dims("data initialization", "spID", "int", context__.to_vec(nData));
-        validate_non_negative_index("spID", "nData", nData);
-        spID = std::vector<int>(nData,int(0));
-        vals_i__ = context__.vals_i("spID");
-        pos__ = 0;
-        size_t spID_limit_0__ = nData;
-        for (size_t i_0__ = 0; i_0__ < spID_limit_0__; ++i_0__) {
-            spID[i_0__] = vals_i__[pos__++];
-        }
-        validate_non_negative_index("spID_posmin", "nSpecies", nSpecies);
-        context__.validate_dims("data initialization", "spID_posmin", "int", context__.to_vec(nSpecies));
-        validate_non_negative_index("spID_posmin", "nSpecies", nSpecies);
-        spID_posmin = std::vector<int>(nSpecies,int(0));
-        vals_i__ = context__.vals_i("spID_posmin");
-        pos__ = 0;
-        size_t spID_posmin_limit_0__ = nSpecies;
-        for (size_t i_0__ = 0; i_0__ < spID_posmin_limit_0__; ++i_0__) {
-            spID_posmin[i_0__] = vals_i__[pos__++];
-        }
-        validate_non_negative_index("spID_posmax", "nSpecies", nSpecies);
-        context__.validate_dims("data initialization", "spID_posmax", "int", context__.to_vec(nSpecies));
-        validate_non_negative_index("spID_posmax", "nSpecies", nSpecies);
-        spID_posmax = std::vector<int>(nSpecies,int(0));
-        vals_i__ = context__.vals_i("spID_posmax");
-        pos__ = 0;
-        size_t spID_posmax_limit_0__ = nSpecies;
-        for (size_t i_0__ = 0; i_0__ < spID_posmax_limit_0__; ++i_0__) {
-            spID_posmax[i_0__] = vals_i__[pos__++];
-        }
         validate_non_negative_index("N_avail", "nData", nData);
         validate_non_negative_index("N_avail", "nSpecies", nSpecies);
-        context__.validate_dims("data initialization", "N_avail", "double", context__.to_vec(nData,nSpecies));
+        context__.validate_dims("data initialization", "N_avail", "matrix_d", context__.to_vec(nData,nSpecies));
         validate_non_negative_index("N_avail", "nData", nData);
         validate_non_negative_index("N_avail", "nSpecies", nSpecies);
-        N_avail = std::vector<std::vector<double> >(nData,std::vector<double>(nSpecies,double(0)));
+        N_avail = matrix_d(static_cast<Eigen::VectorXd::Index>(nData),static_cast<Eigen::VectorXd::Index>(nSpecies));
         vals_r__ = context__.vals_r("N_avail");
         pos__ = 0;
-        size_t N_avail_limit_1__ = nSpecies;
-        for (size_t i_1__ = 0; i_1__ < N_avail_limit_1__; ++i_1__) {
-            size_t N_avail_limit_0__ = nData;
-            for (size_t i_0__ = 0; i_0__ < N_avail_limit_0__; ++i_0__) {
-                N_avail[i_0__][i_1__] = vals_r__[pos__++];
+        size_t N_avail_m_mat_lim__ = nData;
+        size_t N_avail_n_mat_lim__ = nSpecies;
+        for (size_t n_mat__ = 0; n_mat__ < N_avail_n_mat_lim__; ++n_mat__) {
+            for (size_t m_mat__ = 0; m_mat__ < N_avail_m_mat_lim__; ++m_mat__) {
+                N_avail(m_mat__,n_mat__) = vals_r__[pos__++];
             }
         }
         validate_non_negative_index("N_diet", "nData", nData);
@@ -200,14 +640,13 @@ public:
         vals_r__ = context__.vals_r("a");
         pos__ = 0U;
         validate_non_negative_index("a", "nSpecies", nSpecies);
-        context__.validate_dims("initialization", "a", "double", context__.to_vec(nSpecies));
+        context__.validate_dims("initialization", "a", "row_vector_d", context__.to_vec(nSpecies));
         // generate_declaration a
-        std::vector<double> a(nSpecies,double(0));
-        for (int i0__ = 0U; i0__ < nSpecies; ++i0__)
-            a[i0__] = vals_r__[pos__++];
-        for (int i0__ = 0U; i0__ < nSpecies; ++i0__)
-            try {
-            writer__.scalar_unconstrain(a[i0__]);
+        row_vector_d a(static_cast<Eigen::VectorXd::Index>(nSpecies));
+        for (int j1__ = 0U; j1__ < nSpecies; ++j1__)
+            a(j1__) = vals_r__[pos__++];
+        try {
+            writer__.row_vector_lb_unconstrain(0,a);
         } catch (const std::exception& e) { 
             throw std::runtime_error(std::string("Error transforming variable a: ") + e.what());
         }
@@ -217,14 +656,13 @@ public:
         vals_r__ = context__.vals_r("h");
         pos__ = 0U;
         validate_non_negative_index("h", "nSpecies", nSpecies);
-        context__.validate_dims("initialization", "h", "double", context__.to_vec(nSpecies));
+        context__.validate_dims("initialization", "h", "row_vector_d", context__.to_vec(nSpecies));
         // generate_declaration h
-        std::vector<double> h(nSpecies,double(0));
-        for (int i0__ = 0U; i0__ < nSpecies; ++i0__)
-            h[i0__] = vals_r__[pos__++];
-        for (int i0__ = 0U; i0__ < nSpecies; ++i0__)
-            try {
-            writer__.scalar_unconstrain(h[i0__]);
+        row_vector_d h(static_cast<Eigen::VectorXd::Index>(nSpecies));
+        for (int j1__ = 0U; j1__ < nSpecies; ++j1__)
+            h(j1__) = vals_r__[pos__++];
+        try {
+            writer__.row_vector_lb_unconstrain(0,h);
         } catch (const std::exception& e) { 
             throw std::runtime_error(std::string("Error transforming variable h: ") + e.what());
         }
@@ -273,25 +711,19 @@ public:
         // model parameters
         stan::io::reader<T__> in__(params_r__,params_i__);
 
-        vector<T__> a;
-        size_t dim_a_0__ = nSpecies;
-        a.reserve(dim_a_0__);
-        for (size_t k_0__ = 0; k_0__ < dim_a_0__; ++k_0__) {
-            if (jacobian__)
-                a.push_back(in__.scalar_constrain(lp__));
-            else
-                a.push_back(in__.scalar_constrain());
-        }
+        Eigen::Matrix<T__,1,Eigen::Dynamic>  a;
+        (void) a;  // dummy to suppress unused var warning
+        if (jacobian__)
+            a = in__.row_vector_lb_constrain(0,nSpecies,lp__);
+        else
+            a = in__.row_vector_lb_constrain(0,nSpecies);
 
-        vector<T__> h;
-        size_t dim_h_0__ = nSpecies;
-        h.reserve(dim_h_0__);
-        for (size_t k_0__ = 0; k_0__ < dim_h_0__; ++k_0__) {
-            if (jacobian__)
-                h.push_back(in__.scalar_constrain(lp__));
-            else
-                h.push_back(in__.scalar_constrain());
-        }
+        Eigen::Matrix<T__,1,Eigen::Dynamic>  h;
+        (void) h;  // dummy to suppress unused var warning
+        if (jacobian__)
+            h = in__.row_vector_lb_constrain(0,nSpecies,lp__);
+        else
+            h = in__.row_vector_lb_constrain(0,nSpecies);
 
         T__ sigma;
         (void) sigma;  // dummy to suppress unused var warning
@@ -304,7 +736,9 @@ public:
         // transformed parameters
         validate_non_negative_index("phi", "nData", nData);
         validate_non_negative_index("phi", "nSpecies", nSpecies);
-        vector<vector<T__> > phi(nData, (vector<T__>(nSpecies)));
+        Eigen::Matrix<T__,Eigen::Dynamic,Eigen::Dynamic>  phi(static_cast<Eigen::VectorXd::Index>(nData),static_cast<Eigen::VectorXd::Index>(nSpecies));
+        (void) phi;  // dummy to suppress unused var warning
+
         stan::math::initialize(phi, DUMMY_VAR__);
         stan::math::fill(phi,DUMMY_VAR__);
 
@@ -314,7 +748,7 @@ public:
 
                 for (int j = 1; j <= nSpecies; ++j) {
 
-                    stan::math::assign(get_base1_lhs(get_base1_lhs(phi,i,"phi",1),j,"phi",2), ((get_base1(a,j,"a",1) * get_base1(get_base1(N_avail,i,"N_avail",1),j,"N_avail",2)) / (1 + ((get_base1(a,j,"a",1) * get_base1(h,j,"h",1)) * sum(stan::model::rvalue(N_avail, stan::model::cons_list(stan::model::index_uni(i), stan::model::cons_list(stan::model::index_min_max(1, nSpecies), stan::model::nil_index_list())), "N_avail"))))));
+                    stan::math::assign(get_base1_lhs(phi,i,j,"phi",1), ((get_base1(a,j,"a",1) * get_base1(N_avail,i,j,"N_avail",1)) / (1 + sum(elt_multiply(elt_multiply(a,h),get_base1(N_avail,i,"N_avail",1))))));
                 }
             }
         } catch (const std::exception& e) {
@@ -326,7 +760,7 @@ public:
         // validate transformed parameters
         for (int i0__ = 0; i0__ < nData; ++i0__) {
             for (int i1__ = 0; i1__ < nSpecies; ++i1__) {
-                if (stan::math::is_uninitialized(phi[i0__][i1__])) {
+                if (stan::math::is_uninitialized(phi(i0__,i1__))) {
                     std::stringstream msg__;
                     msg__ << "Undefined transformed parameter: phi" << '[' << i0__ << ']' << '[' << i1__ << ']';
                     throw std::runtime_error(msg__.str());
@@ -336,11 +770,7 @@ public:
 
         const char* function__ = "validate transformed params";
         (void) function__;  // dummy to suppress unused var warning
-        for (int k0__ = 0; k0__ < nData; ++k0__) {
-            for (int k1__ = 0; k1__ < nSpecies; ++k1__) {
-                check_greater_or_equal(function__,"phi[k0__][k1__]",phi[k0__][k1__],0);
-            }
-        }
+        check_greater_or_equal(function__,"phi",phi,0);
 
         // model body
         try {
@@ -351,7 +781,7 @@ public:
 
                 for (int j = 1; j <= nSpecies; ++j) {
 
-                    lp_accum__.add(neg_binomial_2_log<propto__>(get_base1(get_base1(N_diet,i,"N_diet",1),j,"N_diet",2), (get_base1(nFaeces,i,"nFaeces",1) * get_base1(get_base1(phi,i,"phi",1),j,"phi",2)), sigma));
+                    lp_accum__.add(neg_binomial_2_log<propto__>(get_base1(get_base1(N_diet,i,"N_diet",1),j,"N_diet",2), (get_base1(nFaeces,i,"nFaeces",1) * get_base1(phi,i,j,"phi",1)), sigma));
                 }
             }
         } catch (const std::exception& e) {
@@ -426,16 +856,8 @@ public:
         static const char* function__ = "model_holling2_namespace::write_array";
         (void) function__;  // dummy to suppress unused var warning
         // read-transform, write parameters
-        vector<double> a;
-        size_t dim_a_0__ = nSpecies;
-        for (size_t k_0__ = 0; k_0__ < dim_a_0__; ++k_0__) {
-            a.push_back(in__.scalar_constrain());
-        }
-        vector<double> h;
-        size_t dim_h_0__ = nSpecies;
-        for (size_t k_0__ = 0; k_0__ < dim_h_0__; ++k_0__) {
-            h.push_back(in__.scalar_constrain());
-        }
+        row_vector_d a = in__.row_vector_lb_constrain(0,nSpecies);
+        row_vector_d h = in__.row_vector_lb_constrain(0,nSpecies);
         double sigma = in__.scalar_lb_constrain(0);
         for (int k_0__ = 0; k_0__ < nSpecies; ++k_0__) {
             vars__.push_back(a[k_0__]);
@@ -456,7 +878,9 @@ public:
 
         validate_non_negative_index("phi", "nData", nData);
         validate_non_negative_index("phi", "nSpecies", nSpecies);
-        vector<vector<double> > phi(nData, (vector<double>(nSpecies, 0.0)));
+        matrix_d phi(static_cast<Eigen::VectorXd::Index>(nData),static_cast<Eigen::VectorXd::Index>(nSpecies));
+        (void) phi;  // dummy to suppress unused var warning
+
         stan::math::initialize(phi, std::numeric_limits<double>::quiet_NaN());
         stan::math::fill(phi,DUMMY_VAR__);
 
@@ -466,7 +890,7 @@ public:
 
                 for (int j = 1; j <= nSpecies; ++j) {
 
-                    stan::math::assign(get_base1_lhs(get_base1_lhs(phi,i,"phi",1),j,"phi",2), ((get_base1(a,j,"a",1) * get_base1(get_base1(N_avail,i,"N_avail",1),j,"N_avail",2)) / (1 + ((get_base1(a,j,"a",1) * get_base1(h,j,"h",1)) * sum(stan::model::rvalue(N_avail, stan::model::cons_list(stan::model::index_uni(i), stan::model::cons_list(stan::model::index_min_max(1, nSpecies), stan::model::nil_index_list())), "N_avail"))))));
+                    stan::math::assign(get_base1_lhs(phi,i,j,"phi",1), ((get_base1(a,j,"a",1) * get_base1(N_avail,i,j,"N_avail",1)) / (1 + sum(elt_multiply(elt_multiply(a,h),get_base1(N_avail,i,"N_avail",1))))));
                 }
             }
         } catch (const std::exception& e) {
@@ -476,16 +900,12 @@ public:
         }
 
         // validate transformed parameters
-        for (int k0__ = 0; k0__ < nData; ++k0__) {
-            for (int k1__ = 0; k1__ < nSpecies; ++k1__) {
-                check_greater_or_equal(function__,"phi[k0__][k1__]",phi[k0__][k1__],0);
-            }
-        }
+        check_greater_or_equal(function__,"phi",phi,0);
 
         // write transformed parameters
         for (int k_1__ = 0; k_1__ < nSpecies; ++k_1__) {
             for (int k_0__ = 0; k_0__ < nData; ++k_0__) {
-                vars__.push_back(phi[k_0__][k_1__]);
+                vars__.push_back(phi(k_0__, k_1__));
             }
         }
 
@@ -508,8 +928,8 @@ public:
 
                 for (int j = 1; j <= nSpecies; ++j) {
 
-                    stan::math::assign(get_base1_lhs(get_base1_lhs(lik,i,"lik",1),j,"lik",2), exp(neg_binomial_2_log(get_base1(get_base1(N_diet,i,"N_diet",1),j,"N_diet",2),(get_base1(nFaeces,i,"nFaeces",1) * get_base1(get_base1(phi,i,"phi",1),j,"phi",2)),sigma)));
-                    stan::math::assign(get_base1_lhs(get_base1_lhs(rep,i,"rep",1),j,"rep",2), neg_binomial_2_rng((get_base1(nFaeces,i,"nFaeces",1) * get_base1(get_base1(phi,i,"phi",1),j,"phi",2)),sigma, base_rng__));
+                    stan::math::assign(get_base1_lhs(get_base1_lhs(lik,i,"lik",1),j,"lik",2), exp(neg_binomial_2_log(get_base1(get_base1(N_diet,i,"N_diet",1),j,"N_diet",2),(get_base1(nFaeces,i,"nFaeces",1) * get_base1(phi,i,j,"phi",1)),sigma)));
+                    stan::math::assign(get_base1_lhs(get_base1_lhs(rep,i,"rep",1),j,"rep",2), neg_binomial_2_rng((get_base1(nFaeces,i,"nFaeces",1) * get_base1(phi,i,j,"phi",1)),sigma, base_rng__));
                 }
             }
         } catch (const std::exception& e) {
@@ -625,6 +1045,710 @@ public:
             for (int k_0__ = 1; k_0__ <= nData; ++k_0__) {
                 param_name_stream__.str(std::string());
                 param_name_stream__ << "phi" << '.' << k_0__ << '.' << k_1__;
+                param_names__.push_back(param_name_stream__.str());
+            }
+        }
+
+        if (!include_gqs__) return;
+        for (int k_1__ = 1; k_1__ <= nSpecies; ++k_1__) {
+            for (int k_0__ = 1; k_0__ <= nData; ++k_0__) {
+                param_name_stream__.str(std::string());
+                param_name_stream__ << "lik" << '.' << k_0__ << '.' << k_1__;
+                param_names__.push_back(param_name_stream__.str());
+            }
+        }
+        for (int k_1__ = 1; k_1__ <= nSpecies; ++k_1__) {
+            for (int k_0__ = 1; k_0__ <= nData; ++k_0__) {
+                param_name_stream__.str(std::string());
+                param_name_stream__ << "rep" << '.' << k_0__ << '.' << k_1__;
+                param_names__.push_back(param_name_stream__.str());
+            }
+        }
+    }
+
+}; // model
+
+}
+
+
+
+
+// Code generated by Stan version 2.16.0
+
+#include <stan/model/model_header.hpp>
+
+namespace model_holling3_namespace {
+
+using std::istream;
+using std::string;
+using std::stringstream;
+using std::vector;
+using stan::io::dump;
+using stan::math::lgamma;
+using stan::model::prob_grad;
+using namespace stan::math;
+
+typedef Eigen::Matrix<double,Eigen::Dynamic,1> vector_d;
+typedef Eigen::Matrix<double,1,Eigen::Dynamic> row_vector_d;
+typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> matrix_d;
+
+static int current_statement_begin__;
+
+stan::io::program_reader prog_reader__() {
+    stan::io::program_reader reader;
+    reader.add_event(0, 0, "start", "model_holling3");
+    reader.add_event(54, 54, "end", "model_holling3");
+    return reader;
+}
+
+class model_holling3 : public prob_grad {
+private:
+    int nData;
+    int nSpecies;
+    vector<int> nFaeces;
+    matrix_d N_avail;
+    vector<vector<int> > N_diet;
+public:
+    model_holling3(stan::io::var_context& context__,
+        std::ostream* pstream__ = 0)
+        : prob_grad(0) {
+        ctor_body(context__, 0, pstream__);
+    }
+
+    model_holling3(stan::io::var_context& context__,
+        unsigned int random_seed__,
+        std::ostream* pstream__ = 0)
+        : prob_grad(0) {
+        ctor_body(context__, random_seed__, pstream__);
+    }
+
+    void ctor_body(stan::io::var_context& context__,
+                   unsigned int random_seed__,
+                   std::ostream* pstream__) {
+        boost::ecuyer1988 base_rng__ =
+          stan::services::util::create_rng(random_seed__, 0);
+        (void) base_rng__;  // suppress unused var warning
+
+        current_statement_begin__ = -1;
+
+        static const char* function__ = "model_holling3_namespace::model_holling3";
+        (void) function__;  // dummy to suppress unused var warning
+        size_t pos__;
+        (void) pos__;  // dummy to suppress unused var warning
+        std::vector<int> vals_i__;
+        std::vector<double> vals_r__;
+        double DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+        (void) DUMMY_VAR__;  // suppress unused var warning
+
+        // initialize member variables
+        context__.validate_dims("data initialization", "nData", "int", context__.to_vec());
+        nData = int(0);
+        vals_i__ = context__.vals_i("nData");
+        pos__ = 0;
+        nData = vals_i__[pos__++];
+        context__.validate_dims("data initialization", "nSpecies", "int", context__.to_vec());
+        nSpecies = int(0);
+        vals_i__ = context__.vals_i("nSpecies");
+        pos__ = 0;
+        nSpecies = vals_i__[pos__++];
+        validate_non_negative_index("nFaeces", "nData", nData);
+        context__.validate_dims("data initialization", "nFaeces", "int", context__.to_vec(nData));
+        validate_non_negative_index("nFaeces", "nData", nData);
+        nFaeces = std::vector<int>(nData,int(0));
+        vals_i__ = context__.vals_i("nFaeces");
+        pos__ = 0;
+        size_t nFaeces_limit_0__ = nData;
+        for (size_t i_0__ = 0; i_0__ < nFaeces_limit_0__; ++i_0__) {
+            nFaeces[i_0__] = vals_i__[pos__++];
+        }
+        validate_non_negative_index("N_avail", "nData", nData);
+        validate_non_negative_index("N_avail", "nSpecies", nSpecies);
+        context__.validate_dims("data initialization", "N_avail", "matrix_d", context__.to_vec(nData,nSpecies));
+        validate_non_negative_index("N_avail", "nData", nData);
+        validate_non_negative_index("N_avail", "nSpecies", nSpecies);
+        N_avail = matrix_d(static_cast<Eigen::VectorXd::Index>(nData),static_cast<Eigen::VectorXd::Index>(nSpecies));
+        vals_r__ = context__.vals_r("N_avail");
+        pos__ = 0;
+        size_t N_avail_m_mat_lim__ = nData;
+        size_t N_avail_n_mat_lim__ = nSpecies;
+        for (size_t n_mat__ = 0; n_mat__ < N_avail_n_mat_lim__; ++n_mat__) {
+            for (size_t m_mat__ = 0; m_mat__ < N_avail_m_mat_lim__; ++m_mat__) {
+                N_avail(m_mat__,n_mat__) = vals_r__[pos__++];
+            }
+        }
+        validate_non_negative_index("N_diet", "nData", nData);
+        validate_non_negative_index("N_diet", "nSpecies", nSpecies);
+        context__.validate_dims("data initialization", "N_diet", "int", context__.to_vec(nData,nSpecies));
+        validate_non_negative_index("N_diet", "nData", nData);
+        validate_non_negative_index("N_diet", "nSpecies", nSpecies);
+        N_diet = std::vector<std::vector<int> >(nData,std::vector<int>(nSpecies,int(0)));
+        vals_i__ = context__.vals_i("N_diet");
+        pos__ = 0;
+        size_t N_diet_limit_1__ = nSpecies;
+        for (size_t i_1__ = 0; i_1__ < N_diet_limit_1__; ++i_1__) {
+            size_t N_diet_limit_0__ = nData;
+            for (size_t i_0__ = 0; i_0__ < N_diet_limit_0__; ++i_0__) {
+                N_diet[i_0__][i_1__] = vals_i__[pos__++];
+            }
+        }
+
+        // validate, data variables
+        check_greater_or_equal(function__,"nData",nData,1);
+        check_greater_or_equal(function__,"nSpecies",nSpecies,1);
+        for (int k0__ = 0; k0__ < nData; ++k0__) {
+            check_greater_or_equal(function__,"nFaeces[k0__]",nFaeces[k0__],0);
+        }
+        // initialize data variables
+
+        try {
+        } catch (const std::exception& e) {
+            stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+            // Next line prevents compiler griping about no return
+            throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+        }
+
+        // validate transformed data
+
+        // validate, set parameter ranges
+        num_params_r__ = 0U;
+        param_ranges_i__.clear();
+        validate_non_negative_index("a", "nSpecies", nSpecies);
+        num_params_r__ += nSpecies;
+        validate_non_negative_index("h", "nSpecies", nSpecies);
+        num_params_r__ += nSpecies;
+        validate_non_negative_index("m", "nSpecies", nSpecies);
+        num_params_r__ += nSpecies;
+        ++num_params_r__;
+    }
+
+    ~model_holling3() { }
+
+
+    void transform_inits(const stan::io::var_context& context__,
+                         std::vector<int>& params_i__,
+                         std::vector<double>& params_r__,
+                         std::ostream* pstream__) const {
+        stan::io::writer<double> writer__(params_r__,params_i__);
+        size_t pos__;
+        (void) pos__; // dummy call to supress warning
+        std::vector<double> vals_r__;
+        std::vector<int> vals_i__;
+
+        if (!(context__.contains_r("a")))
+            throw std::runtime_error("variable a missing");
+        vals_r__ = context__.vals_r("a");
+        pos__ = 0U;
+        validate_non_negative_index("a", "nSpecies", nSpecies);
+        context__.validate_dims("initialization", "a", "row_vector_d", context__.to_vec(nSpecies));
+        // generate_declaration a
+        row_vector_d a(static_cast<Eigen::VectorXd::Index>(nSpecies));
+        for (int j1__ = 0U; j1__ < nSpecies; ++j1__)
+            a(j1__) = vals_r__[pos__++];
+        try {
+            writer__.row_vector_lb_unconstrain(0,a);
+        } catch (const std::exception& e) { 
+            throw std::runtime_error(std::string("Error transforming variable a: ") + e.what());
+        }
+
+        if (!(context__.contains_r("h")))
+            throw std::runtime_error("variable h missing");
+        vals_r__ = context__.vals_r("h");
+        pos__ = 0U;
+        validate_non_negative_index("h", "nSpecies", nSpecies);
+        context__.validate_dims("initialization", "h", "row_vector_d", context__.to_vec(nSpecies));
+        // generate_declaration h
+        row_vector_d h(static_cast<Eigen::VectorXd::Index>(nSpecies));
+        for (int j1__ = 0U; j1__ < nSpecies; ++j1__)
+            h(j1__) = vals_r__[pos__++];
+        try {
+            writer__.row_vector_lb_unconstrain(0,h);
+        } catch (const std::exception& e) { 
+            throw std::runtime_error(std::string("Error transforming variable h: ") + e.what());
+        }
+
+        if (!(context__.contains_r("m")))
+            throw std::runtime_error("variable m missing");
+        vals_r__ = context__.vals_r("m");
+        pos__ = 0U;
+        validate_non_negative_index("m", "nSpecies", nSpecies);
+        context__.validate_dims("initialization", "m", "double", context__.to_vec(nSpecies));
+        // generate_declaration m
+        std::vector<double> m(nSpecies,double(0));
+        for (int i0__ = 0U; i0__ < nSpecies; ++i0__)
+            m[i0__] = vals_r__[pos__++];
+        for (int i0__ = 0U; i0__ < nSpecies; ++i0__)
+            try {
+            writer__.scalar_lb_unconstrain(0,m[i0__]);
+        } catch (const std::exception& e) { 
+            throw std::runtime_error(std::string("Error transforming variable m: ") + e.what());
+        }
+
+        if (!(context__.contains_r("sigma")))
+            throw std::runtime_error("variable sigma missing");
+        vals_r__ = context__.vals_r("sigma");
+        pos__ = 0U;
+        context__.validate_dims("initialization", "sigma", "double", context__.to_vec());
+        // generate_declaration sigma
+        double sigma(0);
+        sigma = vals_r__[pos__++];
+        try {
+            writer__.scalar_lb_unconstrain(0,sigma);
+        } catch (const std::exception& e) { 
+            throw std::runtime_error(std::string("Error transforming variable sigma: ") + e.what());
+        }
+
+        params_r__ = writer__.data_r();
+        params_i__ = writer__.data_i();
+    }
+
+    void transform_inits(const stan::io::var_context& context,
+                         Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                         std::ostream* pstream__) const {
+      std::vector<double> params_r_vec;
+      std::vector<int> params_i_vec;
+      transform_inits(context, params_i_vec, params_r_vec, pstream__);
+      params_r.resize(params_r_vec.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r(i) = params_r_vec[i];
+    }
+
+
+    template <bool propto__, bool jacobian__, typename T__>
+    T__ log_prob(vector<T__>& params_r__,
+                 vector<int>& params_i__,
+                 std::ostream* pstream__ = 0) const {
+
+        T__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+        (void) DUMMY_VAR__;  // suppress unused var warning
+
+        T__ lp__(0.0);
+        stan::math::accumulator<T__> lp_accum__;
+
+        // model parameters
+        stan::io::reader<T__> in__(params_r__,params_i__);
+
+        Eigen::Matrix<T__,1,Eigen::Dynamic>  a;
+        (void) a;  // dummy to suppress unused var warning
+        if (jacobian__)
+            a = in__.row_vector_lb_constrain(0,nSpecies,lp__);
+        else
+            a = in__.row_vector_lb_constrain(0,nSpecies);
+
+        Eigen::Matrix<T__,1,Eigen::Dynamic>  h;
+        (void) h;  // dummy to suppress unused var warning
+        if (jacobian__)
+            h = in__.row_vector_lb_constrain(0,nSpecies,lp__);
+        else
+            h = in__.row_vector_lb_constrain(0,nSpecies);
+
+        vector<T__> m;
+        size_t dim_m_0__ = nSpecies;
+        m.reserve(dim_m_0__);
+        for (size_t k_0__ = 0; k_0__ < dim_m_0__; ++k_0__) {
+            if (jacobian__)
+                m.push_back(in__.scalar_lb_constrain(0,lp__));
+            else
+                m.push_back(in__.scalar_lb_constrain(0));
+        }
+
+        T__ sigma;
+        (void) sigma;  // dummy to suppress unused var warning
+        if (jacobian__)
+            sigma = in__.scalar_lb_constrain(0,lp__);
+        else
+            sigma = in__.scalar_lb_constrain(0);
+
+
+        // transformed parameters
+        validate_non_negative_index("phi", "nData", nData);
+        validate_non_negative_index("phi", "nSpecies", nSpecies);
+        Eigen::Matrix<T__,Eigen::Dynamic,Eigen::Dynamic>  phi(static_cast<Eigen::VectorXd::Index>(nData),static_cast<Eigen::VectorXd::Index>(nSpecies));
+        (void) phi;  // dummy to suppress unused var warning
+
+        stan::math::initialize(phi, DUMMY_VAR__);
+        stan::math::fill(phi,DUMMY_VAR__);
+        validate_non_negative_index("N_avail_sq", "nData", nData);
+        validate_non_negative_index("N_avail_sq", "nSpecies", nSpecies);
+        Eigen::Matrix<T__,Eigen::Dynamic,Eigen::Dynamic>  N_avail_sq(static_cast<Eigen::VectorXd::Index>(nData),static_cast<Eigen::VectorXd::Index>(nSpecies));
+        (void) N_avail_sq;  // dummy to suppress unused var warning
+
+        stan::math::initialize(N_avail_sq, DUMMY_VAR__);
+        stan::math::fill(N_avail_sq,DUMMY_VAR__);
+
+
+        try {
+            for (int i = 1; i <= nData; ++i) {
+
+                for (int j = 1; j <= nSpecies; ++j) {
+
+                    stan::math::assign(get_base1_lhs(N_avail_sq,i,j,"N_avail_sq",1), pow(get_base1(N_avail,i,j,"N_avail",1),get_base1(m,j,"m",1)));
+                }
+                for (int j = 1; j <= nSpecies; ++j) {
+
+                    stan::math::assign(get_base1_lhs(phi,i,j,"phi",1), ((get_base1(a,j,"a",1) * get_base1(N_avail_sq,i,j,"N_avail_sq",1)) / (1 + sum(elt_multiply(elt_multiply(a,h),get_base1(N_avail_sq,i,"N_avail_sq",1))))));
+                }
+            }
+        } catch (const std::exception& e) {
+            stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+            // Next line prevents compiler griping about no return
+            throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+        }
+
+        // validate transformed parameters
+        for (int i0__ = 0; i0__ < nData; ++i0__) {
+            for (int i1__ = 0; i1__ < nSpecies; ++i1__) {
+                if (stan::math::is_uninitialized(phi(i0__,i1__))) {
+                    std::stringstream msg__;
+                    msg__ << "Undefined transformed parameter: phi" << '[' << i0__ << ']' << '[' << i1__ << ']';
+                    throw std::runtime_error(msg__.str());
+                }
+            }
+        }
+        for (int i0__ = 0; i0__ < nData; ++i0__) {
+            for (int i1__ = 0; i1__ < nSpecies; ++i1__) {
+                if (stan::math::is_uninitialized(N_avail_sq(i0__,i1__))) {
+                    std::stringstream msg__;
+                    msg__ << "Undefined transformed parameter: N_avail_sq" << '[' << i0__ << ']' << '[' << i1__ << ']';
+                    throw std::runtime_error(msg__.str());
+                }
+            }
+        }
+
+        const char* function__ = "validate transformed params";
+        (void) function__;  // dummy to suppress unused var warning
+        check_greater_or_equal(function__,"phi",phi,0);
+
+        // model body
+        try {
+
+            lp_accum__.add(gamma_log<propto__>(a, 1, 1));
+            lp_accum__.add(gamma_log<propto__>(h, 1, 1));
+            lp_accum__.add(uniform_log<propto__>(m, 0, 10));
+            for (int i = 1; i <= nData; ++i) {
+
+                for (int j = 1; j <= nSpecies; ++j) {
+
+                    lp_accum__.add(neg_binomial_2_log<propto__>(get_base1(get_base1(N_diet,i,"N_diet",1),j,"N_diet",2), (get_base1(nFaeces,i,"nFaeces",1) * get_base1(phi,i,j,"phi",1)), sigma));
+                }
+            }
+        } catch (const std::exception& e) {
+            stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+            // Next line prevents compiler griping about no return
+            throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+        }
+
+        lp_accum__.add(lp__);
+        return lp_accum__.sum();
+
+    } // log_prob()
+
+    template <bool propto, bool jacobian, typename T_>
+    T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+               std::ostream* pstream = 0) const {
+      std::vector<T_> vec_params_r;
+      vec_params_r.reserve(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        vec_params_r.push_back(params_r(i));
+      std::vector<int> vec_params_i;
+      return log_prob<propto,jacobian,T_>(vec_params_r, vec_params_i, pstream);
+    }
+
+
+    void get_param_names(std::vector<std::string>& names__) const {
+        names__.resize(0);
+        names__.push_back("a");
+        names__.push_back("h");
+        names__.push_back("m");
+        names__.push_back("sigma");
+        names__.push_back("phi");
+        names__.push_back("N_avail_sq");
+        names__.push_back("lik");
+        names__.push_back("rep");
+    }
+
+
+    void get_dims(std::vector<std::vector<size_t> >& dimss__) const {
+        dimss__.resize(0);
+        std::vector<size_t> dims__;
+        dims__.resize(0);
+        dims__.push_back(nSpecies);
+        dimss__.push_back(dims__);
+        dims__.resize(0);
+        dims__.push_back(nSpecies);
+        dimss__.push_back(dims__);
+        dims__.resize(0);
+        dims__.push_back(nSpecies);
+        dimss__.push_back(dims__);
+        dims__.resize(0);
+        dimss__.push_back(dims__);
+        dims__.resize(0);
+        dims__.push_back(nData);
+        dims__.push_back(nSpecies);
+        dimss__.push_back(dims__);
+        dims__.resize(0);
+        dims__.push_back(nData);
+        dims__.push_back(nSpecies);
+        dimss__.push_back(dims__);
+        dims__.resize(0);
+        dims__.push_back(nData);
+        dims__.push_back(nSpecies);
+        dimss__.push_back(dims__);
+        dims__.resize(0);
+        dims__.push_back(nData);
+        dims__.push_back(nSpecies);
+        dimss__.push_back(dims__);
+    }
+
+    template <typename RNG>
+    void write_array(RNG& base_rng__,
+                     std::vector<double>& params_r__,
+                     std::vector<int>& params_i__,
+                     std::vector<double>& vars__,
+                     bool include_tparams__ = true,
+                     bool include_gqs__ = true,
+                     std::ostream* pstream__ = 0) const {
+        vars__.resize(0);
+        stan::io::reader<double> in__(params_r__,params_i__);
+        static const char* function__ = "model_holling3_namespace::write_array";
+        (void) function__;  // dummy to suppress unused var warning
+        // read-transform, write parameters
+        row_vector_d a = in__.row_vector_lb_constrain(0,nSpecies);
+        row_vector_d h = in__.row_vector_lb_constrain(0,nSpecies);
+        vector<double> m;
+        size_t dim_m_0__ = nSpecies;
+        for (size_t k_0__ = 0; k_0__ < dim_m_0__; ++k_0__) {
+            m.push_back(in__.scalar_lb_constrain(0));
+        }
+        double sigma = in__.scalar_lb_constrain(0);
+        for (int k_0__ = 0; k_0__ < nSpecies; ++k_0__) {
+            vars__.push_back(a[k_0__]);
+        }
+        for (int k_0__ = 0; k_0__ < nSpecies; ++k_0__) {
+            vars__.push_back(h[k_0__]);
+        }
+        for (int k_0__ = 0; k_0__ < nSpecies; ++k_0__) {
+            vars__.push_back(m[k_0__]);
+        }
+        vars__.push_back(sigma);
+
+        if (!include_tparams__) return;
+        // declare and define transformed parameters
+        double lp__ = 0.0;
+        (void) lp__;  // dummy to suppress unused var warning
+        stan::math::accumulator<double> lp_accum__;
+
+        double DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+        (void) DUMMY_VAR__;  // suppress unused var warning
+
+        validate_non_negative_index("phi", "nData", nData);
+        validate_non_negative_index("phi", "nSpecies", nSpecies);
+        matrix_d phi(static_cast<Eigen::VectorXd::Index>(nData),static_cast<Eigen::VectorXd::Index>(nSpecies));
+        (void) phi;  // dummy to suppress unused var warning
+
+        stan::math::initialize(phi, std::numeric_limits<double>::quiet_NaN());
+        stan::math::fill(phi,DUMMY_VAR__);
+        validate_non_negative_index("N_avail_sq", "nData", nData);
+        validate_non_negative_index("N_avail_sq", "nSpecies", nSpecies);
+        matrix_d N_avail_sq(static_cast<Eigen::VectorXd::Index>(nData),static_cast<Eigen::VectorXd::Index>(nSpecies));
+        (void) N_avail_sq;  // dummy to suppress unused var warning
+
+        stan::math::initialize(N_avail_sq, std::numeric_limits<double>::quiet_NaN());
+        stan::math::fill(N_avail_sq,DUMMY_VAR__);
+
+
+        try {
+            for (int i = 1; i <= nData; ++i) {
+
+                for (int j = 1; j <= nSpecies; ++j) {
+
+                    stan::math::assign(get_base1_lhs(N_avail_sq,i,j,"N_avail_sq",1), pow(get_base1(N_avail,i,j,"N_avail",1),get_base1(m,j,"m",1)));
+                }
+                for (int j = 1; j <= nSpecies; ++j) {
+
+                    stan::math::assign(get_base1_lhs(phi,i,j,"phi",1), ((get_base1(a,j,"a",1) * get_base1(N_avail_sq,i,j,"N_avail_sq",1)) / (1 + sum(elt_multiply(elt_multiply(a,h),get_base1(N_avail_sq,i,"N_avail_sq",1))))));
+                }
+            }
+        } catch (const std::exception& e) {
+            stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+            // Next line prevents compiler griping about no return
+            throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+        }
+
+        // validate transformed parameters
+        check_greater_or_equal(function__,"phi",phi,0);
+
+        // write transformed parameters
+        for (int k_1__ = 0; k_1__ < nSpecies; ++k_1__) {
+            for (int k_0__ = 0; k_0__ < nData; ++k_0__) {
+                vars__.push_back(phi(k_0__, k_1__));
+            }
+        }
+        for (int k_1__ = 0; k_1__ < nSpecies; ++k_1__) {
+            for (int k_0__ = 0; k_0__ < nData; ++k_0__) {
+                vars__.push_back(N_avail_sq(k_0__, k_1__));
+            }
+        }
+
+        if (!include_gqs__) return;
+        // declare and define generated quantities
+        validate_non_negative_index("lik", "nData", nData);
+        validate_non_negative_index("lik", "nSpecies", nSpecies);
+        vector<vector<double> > lik(nData, (vector<double>(nSpecies, 0.0)));
+        stan::math::initialize(lik, std::numeric_limits<double>::quiet_NaN());
+        stan::math::fill(lik,DUMMY_VAR__);
+        validate_non_negative_index("rep", "nData", nData);
+        validate_non_negative_index("rep", "nSpecies", nSpecies);
+        vector<vector<double> > rep(nData, (vector<double>(nSpecies, 0.0)));
+        stan::math::initialize(rep, std::numeric_limits<double>::quiet_NaN());
+        stan::math::fill(rep,DUMMY_VAR__);
+
+
+        try {
+            for (int i = 1; i <= nData; ++i) {
+
+                for (int j = 1; j <= nSpecies; ++j) {
+
+                    stan::math::assign(get_base1_lhs(get_base1_lhs(lik,i,"lik",1),j,"lik",2), exp(neg_binomial_2_log(get_base1(get_base1(N_diet,i,"N_diet",1),j,"N_diet",2),(get_base1(nFaeces,i,"nFaeces",1) * get_base1(phi,i,j,"phi",1)),sigma)));
+                    stan::math::assign(get_base1_lhs(get_base1_lhs(rep,i,"rep",1),j,"rep",2), neg_binomial_2_rng((get_base1(nFaeces,i,"nFaeces",1) * get_base1(phi,i,j,"phi",1)),sigma, base_rng__));
+                }
+            }
+        } catch (const std::exception& e) {
+            stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+            // Next line prevents compiler griping about no return
+            throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+        }
+
+        // validate generated quantities
+
+        // write generated quantities
+        for (int k_1__ = 0; k_1__ < nSpecies; ++k_1__) {
+            for (int k_0__ = 0; k_0__ < nData; ++k_0__) {
+                vars__.push_back(lik[k_0__][k_1__]);
+            }
+        }
+        for (int k_1__ = 0; k_1__ < nSpecies; ++k_1__) {
+            for (int k_0__ = 0; k_0__ < nData; ++k_0__) {
+                vars__.push_back(rep[k_0__][k_1__]);
+            }
+        }
+
+    }
+
+    template <typename RNG>
+    void write_array(RNG& base_rng,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                     Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                     bool include_tparams = true,
+                     bool include_gqs = true,
+                     std::ostream* pstream = 0) const {
+      std::vector<double> params_r_vec(params_r.size());
+      for (int i = 0; i < params_r.size(); ++i)
+        params_r_vec[i] = params_r(i);
+      std::vector<double> vars_vec;
+      std::vector<int> params_i_vec;
+      write_array(base_rng,params_r_vec,params_i_vec,vars_vec,include_tparams,include_gqs,pstream);
+      vars.resize(vars_vec.size());
+      for (int i = 0; i < vars.size(); ++i)
+        vars(i) = vars_vec[i];
+    }
+
+    static std::string model_name() {
+        return "model_holling3";
+    }
+
+
+    void constrained_param_names(std::vector<std::string>& param_names__,
+                                 bool include_tparams__ = true,
+                                 bool include_gqs__ = true) const {
+        std::stringstream param_name_stream__;
+        for (int k_0__ = 1; k_0__ <= nSpecies; ++k_0__) {
+            param_name_stream__.str(std::string());
+            param_name_stream__ << "a" << '.' << k_0__;
+            param_names__.push_back(param_name_stream__.str());
+        }
+        for (int k_0__ = 1; k_0__ <= nSpecies; ++k_0__) {
+            param_name_stream__.str(std::string());
+            param_name_stream__ << "h" << '.' << k_0__;
+            param_names__.push_back(param_name_stream__.str());
+        }
+        for (int k_0__ = 1; k_0__ <= nSpecies; ++k_0__) {
+            param_name_stream__.str(std::string());
+            param_name_stream__ << "m" << '.' << k_0__;
+            param_names__.push_back(param_name_stream__.str());
+        }
+        param_name_stream__.str(std::string());
+        param_name_stream__ << "sigma";
+        param_names__.push_back(param_name_stream__.str());
+
+        if (!include_gqs__ && !include_tparams__) return;
+        for (int k_1__ = 1; k_1__ <= nSpecies; ++k_1__) {
+            for (int k_0__ = 1; k_0__ <= nData; ++k_0__) {
+                param_name_stream__.str(std::string());
+                param_name_stream__ << "phi" << '.' << k_0__ << '.' << k_1__;
+                param_names__.push_back(param_name_stream__.str());
+            }
+        }
+        for (int k_1__ = 1; k_1__ <= nSpecies; ++k_1__) {
+            for (int k_0__ = 1; k_0__ <= nData; ++k_0__) {
+                param_name_stream__.str(std::string());
+                param_name_stream__ << "N_avail_sq" << '.' << k_0__ << '.' << k_1__;
+                param_names__.push_back(param_name_stream__.str());
+            }
+        }
+
+        if (!include_gqs__) return;
+        for (int k_1__ = 1; k_1__ <= nSpecies; ++k_1__) {
+            for (int k_0__ = 1; k_0__ <= nData; ++k_0__) {
+                param_name_stream__.str(std::string());
+                param_name_stream__ << "lik" << '.' << k_0__ << '.' << k_1__;
+                param_names__.push_back(param_name_stream__.str());
+            }
+        }
+        for (int k_1__ = 1; k_1__ <= nSpecies; ++k_1__) {
+            for (int k_0__ = 1; k_0__ <= nData; ++k_0__) {
+                param_name_stream__.str(std::string());
+                param_name_stream__ << "rep" << '.' << k_0__ << '.' << k_1__;
+                param_names__.push_back(param_name_stream__.str());
+            }
+        }
+    }
+
+
+    void unconstrained_param_names(std::vector<std::string>& param_names__,
+                                   bool include_tparams__ = true,
+                                   bool include_gqs__ = true) const {
+        std::stringstream param_name_stream__;
+        for (int k_0__ = 1; k_0__ <= nSpecies; ++k_0__) {
+            param_name_stream__.str(std::string());
+            param_name_stream__ << "a" << '.' << k_0__;
+            param_names__.push_back(param_name_stream__.str());
+        }
+        for (int k_0__ = 1; k_0__ <= nSpecies; ++k_0__) {
+            param_name_stream__.str(std::string());
+            param_name_stream__ << "h" << '.' << k_0__;
+            param_names__.push_back(param_name_stream__.str());
+        }
+        for (int k_0__ = 1; k_0__ <= nSpecies; ++k_0__) {
+            param_name_stream__.str(std::string());
+            param_name_stream__ << "m" << '.' << k_0__;
+            param_names__.push_back(param_name_stream__.str());
+        }
+        param_name_stream__.str(std::string());
+        param_name_stream__ << "sigma";
+        param_names__.push_back(param_name_stream__.str());
+
+        if (!include_gqs__ && !include_tparams__) return;
+        for (int k_1__ = 1; k_1__ <= nSpecies; ++k_1__) {
+            for (int k_0__ = 1; k_0__ <= nData; ++k_0__) {
+                param_name_stream__.str(std::string());
+                param_name_stream__ << "phi" << '.' << k_0__ << '.' << k_1__;
+                param_names__.push_back(param_name_stream__.str());
+            }
+        }
+        for (int k_1__ = 1; k_1__ <= nSpecies; ++k_1__) {
+            for (int k_0__ = 1; k_0__ <= nData; ++k_0__) {
+                param_name_stream__.str(std::string());
+                param_name_stream__ << "N_avail_sq" << '.' << k_0__ << '.' << k_1__;
                 param_names__.push_back(param_name_stream__.str());
             }
         }
