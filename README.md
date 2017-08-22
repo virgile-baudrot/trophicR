@@ -46,7 +46,6 @@ Once the package **trophicR** is installed in your environment, try to estimate 
 Holling type 2 functional response for multi species is mathematically described by the function *Phi* (the rate of ingestion of prey *i* depending on density of *n* prey species):
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=\Phi_1(x_1,&space;x_2)&space;=&space;\frac{a_1&space;x_1}{&space;1&space;&plus;&space;a_1&space;h_1&space;x_1&space;&plus;&space;a_2&space;h_2&space;x_2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\Phi_1(x_1,&space;x_2)&space;=&space;\frac{a_1&space;x_1}{&space;1&space;&plus;&space;a_1&space;h_1&space;x_1&space;&plus;&space;a_2&space;h_2&space;x_2}" title="\Phi_1(x_1, x_2) = \frac{a_1 x_1}{ 1 + a_1 h_1 x_1 + a_2 h_2 x_2}" /></a>
-<img src="https://github.com/virgile-baudrot/trophicR/blob/master/images/Holling2Eq.gif" width=800 alt="Holling2Eq"/>
 
 
 with *x_1* and *x_2* the densities of prey species (or any other measures of prey availability). Parameters *a_1*, *a_2* are the attack rate toward prey *1* and *2* respectivelly, and *h_1*, *h_2* are the handling times for both preys. 
