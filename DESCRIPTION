@@ -19,3 +19,6 @@ Imports:
 LinkingTo: StanHeaders (>= 2.15.0.1), rstan (>= 2.15.1), BH (>= 1.62.0.1), Rcpp (>= 0.12.11), RcppEigen (>= 0.3.3.3.0)
 BugReports: https://github.com/virgile-baudrot/trophicR/issues
 RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
