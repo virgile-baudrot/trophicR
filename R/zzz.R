@@ -1,4 +1,5 @@
 #' @useDynLib trophicR, .registration = TRUE 
+#' @import Rcpp
 
 .onLoad <- function(libname, pkgname) {
   modules <- paste0("stan_fit4", names(stanmodels), "_mod")
