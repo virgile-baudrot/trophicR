@@ -11,13 +11,13 @@ data {
 
 }
 parameters {
-  row_vector[nSpecies] a; // attack rate
-  row_vector[nSpecies] h; // handling time
+  row_vector<lower=0>[nSpecies] a; // attack rate
+  row_vector<lower=0>[nSpecies] h; // handling time
   
   real<lower=0> sigma;
 }
 transformed parameters{
-  matrix[nData, nSpecies] phi;
+  matrix<lower=0>[nData, nSpecies] phi;
 
   for(i in 1:nData){
     for(j in 1:nSpecies){

@@ -11,23 +11,29 @@ data {
   
 }
 parameters {
-  row_vector[nSpecies] a; // attack rate
-  row_vector[nSpecies] h; // handling time
+  row_vector<lower=0>[nSpecies] a; // attack rate
+  row_vector<lower=0>[nSpecies] h; // handling time
+  real<lower=0> m[nSpecies]; // exponent for holling type 3
   
   real<lower=0> sigma;
 }
 transformed parameters{
-  matrix[nData, nSpecies] phi;
+  matrix<lower=0>[nData, nSpecies] phi;
+  matrix[nData, nSpecies] N_avail_sq;
   
   for(i in 1:nData){
+    for(j in 1:nSpecies){ // MAYBE TOO long
+      N_avail_sq[i, j] = pow(N_avail[i, j], m[j]); 
+    }
     for(j in 1:nSpecies){
-      phi[i, j] = a[j] * N_avail[i,j]^2 / (1 +  sum(a .* h .* N_avail[i]^2 ));
+      phi[i, j] = a[j] * N_avail_sq[i, j] / (1 +  sum(a .* h .* N_avail_sq[i] ));
     }
   }
 }
 model {
   a ~ gamma(1,1);
   h ~ gamma(1,1);
+  m ~ uniform(0,10);
   
   for(i in 1:nData){
     for(j in 1:nSpecies){
