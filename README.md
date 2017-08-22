@@ -39,6 +39,89 @@ Make sure to include the `args = "--preclean"` and `build_vignettes = FALSE` arg
 or the development version of package will not install properly. If installation fails,
 please let us know by [filing an issue](https://github.com/virgile-baudrot/trophicR/issues).
 
+## Starting with trophicR
+
+Once the package **trophicR** is installed in your environment, try to estimate an classical Holling type 2 functional response.
+
+1. load the library
+```r
+library(trophicR)
+```
+
+2. load the data set, and then a plot (using the library **ggplot2**)
+```r
+data("fox_Raoul2010")
+
+# plot of the data set
+library(ggplot2)
+df_fox <- data.frame(density = c(fox_Raoul2010$N_avail[,1], fox_Raoul2010$N_avail[,2]),
+                     diet = c(fox_Raoul2010$N_diet[,1], fox_Raoul2010$N_diet[,2] ),
+                     nFaeces = rep(fox_Raoul2010$nFaeces, 2),
+                     species = c(rep("Arvicola scherman",41), rep("Microtus arvalis", 41)))
+
+ggplot(data = df_fox) + theme_light() +
+  labs(x = "prey available", y = "proportion of prey ingested") +
+  geom_point(aes(x = density, y = diet/nFaeces, group = species)) +
+  facet_wrap(~ species)
+```
+
+<img src="https://github.com/virgile-baudrot/trophicR/blob/master/images/foxData.png" width=800 alt="TrophicR Logo"/>
+
+
+
+3. Fit the model with the function `trophicFit`. Do not forget to specify the type of functional response (here `holling2`).
+```r
+fit_foxH2 <- trophicFit(data = fox_Raoul2010, trophic_model = "holling2")
+```
+Eplore the object `fit_foxH2`. Red point in the following graph are predictions of medians from Bayesian estimates.
+
+<img src="https://github.com/virgile-baudrot/trophicR/blob/master/images/foxH2rep.png" width=800 alt="TrophicR Logo"/>
+
+4. Try to predict for other densities
+```r
+# Extract results
+result_foxH2 <- extract(fit_foxH2, pars = c('a', 'h', 'phi', 'rep'))
+
+aA <- result_foxH2$a[,1]
+aM <- result_foxH2$a[,2]
+hA <- result_foxH2$h[,1]
+hM <- result_foxH2$h[,2]
+
+# Compute prediction
+
+dens <- expand.grid(A = seq(1,100,length.out = 12),
+                    M = seq(1,100,length.out = 12))
+
+phiA <- aA %*% t(dens$A) / (1 + (aA * hA) %*% t(dens$A) + (aM * hM) %*% t(dens$M))
+phiM <- aM %*% t(dens$M) / (1 + (aA * hA) %*% t(dens$A) + (aM * hM) %*% t(dens$M))
+
+df_foxH2pred <- data.frame(densA = dens$A,
+                           densM = dens$M,
+                           phiA_q50 = apply(phiA, 2, quantile, probs = 0.5),
+                           phiM_q50 = apply(phiM, 2, quantile, probs = 0.5),
+                           phiA_qinf95 = apply(phiA, 2, quantile, probs = 0.025),
+                           phiM_qinf95 = apply(phiM, 2, quantile, probs = 0.025),
+                           phiA_qsup95 = apply(phiA, 2, quantile, probs = 0.975),
+                           phiM_qsup95 = apply(phiM, 2, quantile, probs = 0.975))
+
+#
+# Graphic in 2D while a 3D would be more relevant in that case
+#
+
+ggplot(data = df_foxH2pred) + theme_light() +
+  labs(x = "prey available", y = "proportion of prey ingested",
+       title ="Ingestion rate of Microtus arvalis depending of its density.\n Panel corresond to different density of Arvicola scherman") +
+  geom_ribbon(aes(x = densM,
+                  ymin = phiM_qinf95, ymax = phiM_qsup95), fill="pink", alpha = 0.3) +
+  geom_line(aes(x = densM, y = phiM_q50), color="red") +
+  facet_wrap(~ densA, ncol=4)
+
+```
+
+<img src="https://github.com/virgile-baudrot/trophicR/blob/master/images/foxH2Pred.png" width=800 alt="TrophicR Logo"/>
+
+
+
 ## Getting help
 
 * [Create an issue on GitHub](https://github.com/virgile-baudrot/trophicR/issues)
