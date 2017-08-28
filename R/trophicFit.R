@@ -42,6 +42,8 @@ trophicFit <- function(data, trophic_model = NULL, ...){
     model_object <- stanmodels$holling2
   } else if(trophic_model == "holling3"){
     model_object <- stanmodels$holling3
+  } else if(trophic_model == "KTW"){
+    model_object <- stanmodels$KTW
   } else stop("'trophic_model' must be 'holling2' or 'holling3'.")
   
   fit <- rstan::sampling(
