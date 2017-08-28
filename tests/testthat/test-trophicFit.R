@@ -1,3 +1,4 @@
+# library(trophicR)
 # # test simple Holling 2 to ensure Stan running
 # 
 # data("data_H2test")
@@ -15,5 +16,8 @@
 #
 # fit_foxH3 <- trophicFit(data = fox_Raoul2010, trophic_model = "holling3")
 #
-# fit_test <- stan(data = fox_Raoul2010, file = "exec/holling3.stan")
-
+# # test KTW
+# 
+# fit_foxKTW <- trophicFit(data = fox_Raoul2010, trophic_model = "KTW")
+#
+# fit_test <- stan(data = fox_Raoul2010, file = "exec/KTW.stan")
