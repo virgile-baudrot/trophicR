@@ -19,14 +19,14 @@ parameters {
 }
 transformed parameters{
   matrix<lower=0>[nData, nSpecies] phi;
-  matrix[nData, nSpecies] N_avail_sq;
+  matrix[nData, nSpecies] N_avail_exp;
   
   for(i in 1:nData){
     for(j in 1:nSpecies){ // MAYBE TOO long
-      N_avail_sq[i, j] = pow(N_avail[i, j], m[j]); 
+      N_avail_exp[i, j] = pow(N_avail[i, j], m[j]); 
     }
     for(j in 1:nSpecies){
-      phi[i, j] = a[j] * N_avail_sq[i, j] / (1 +  sum(a .* h .* N_avail_sq[i] ));
+      phi[i, j] = a[j] * N_avail_exp[i, j] / (1 +  sum(a .* h .* N_avail_exp[i] ));
     }
   }
 }
