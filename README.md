@@ -13,7 +13,7 @@
 **trophicR** is an R package to facilitate model-fitting of functional
 responses (trophic interactions) using a Bayesian approach with [Stan](http://mc-stan.org) (via the **rstan** package).
 
-**trophicR** is deeply inspired by the [rstanarm](https://github.com/stan-dev/rstanarm) package.
+The way I'm developping **trophicR** is deeply inspired by the [rstanarm](https://github.com/stan-dev/rstanarm) package.
 
 ## Installation
 
