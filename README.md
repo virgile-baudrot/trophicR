@@ -1,5 +1,7 @@
-![In progress](http://i.stack.imgur.com/kmfPT.png)
+![In progress](https://github.com/virgile-baudrot/trophicR/blob/master/images/work-in-progress_30.png)
 Work in progress, the package not ready for release.
+
+
 
 <a href="https://github.com/virgile-baudrot/trophicR">
 <img src="https://github.com/virgile-baudrot/trophicR/blob/master/images/logo.png" width=200 alt="TrophicR Logo"/>
@@ -51,7 +53,7 @@ Holling type 2 functional response for multi species is mathematically described
 <a href="https://www.codecogs.com/eqnedit.php?latex=\Phi_1(x_1,&space;x_2)&space;=&space;\frac{a_1&space;x_1}{&space;1&space;&plus;&space;a_1&space;h_1&space;x_1&space;&plus;&space;a_2&space;h_2&space;x_2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\Phi_1(x_1,&space;x_2)&space;=&space;\frac{a_1&space;x_1}{&space;1&space;&plus;&space;a_1&space;h_1&space;x_1&space;&plus;&space;a_2&space;h_2&space;x_2}" title="\Phi_1(x_1, x_2) = \frac{a_1 x_1}{ 1 + a_1 h_1 x_1 + a_2 h_2 x_2}" /></a>
 
 
-with *x_1* and *x_2* the densities of prey species (or any other measures of prey availability). Parameters *a_1*, *a_2* are the attack rate toward prey *1* and *2* respectivelly, and *h_1*, *h_2* are the handling times for both preys. 
+with *x_1* and *x_2* the densities of prey species (or any other measures of prey availability). Parameters *a_1*, *a_2* are the attack rate toward prey *1* and *2* respectivelly, and *h_1*, *h_2* are the handling times for both preys.
 
 1. load the library
 ```r
@@ -138,7 +140,6 @@ ggplot(data = df_foxH2pred) + theme_light() +
 <img src="https://github.com/virgile-baudrot/trophicR/blob/master/images/foxH2Pred.png" width=800 alt="fox H2 predict"/>
 
 
-
 ## Getting help
 
 * [Create an issue on GitHub](https://github.com/virgile-baudrot/trophicR/issues)
@@ -158,10 +159,10 @@ the function `rstan_package_skeleton`.
   `#' @useDynLib rstanarm, .registration = TRUE`  which can be confusing in
   regards   with the begin of the sentence:
   `useDynLib(mypackage, .registration = TRUE)`. It could be also relevant to
-  specify that it's necessary to use `#' @useDynLib rstanarm, .registration = TRUE`
+  specify that it's necessary to use `#' @useDynLib mypackage, .registration = TRUE`
    if the user generate the NAMESPACE file with roxygen2.
 
-* For the warning with cleanup and cleanup.win not executable :
+* For the warning with cleanup and cleanup.win not executable:
 ```
 $ chmod +x cleanup
 $ chmod +x cleanup.win
