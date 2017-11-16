@@ -1,3 +1,6 @@
+![In progress](http://i.stack.imgur.com/kmfPT.png)
+Work in progress, the package not ready for release.
+
 <a href="https://github.com/virgile-baudrot/trophicR">
 <img src="https://github.com/virgile-baudrot/trophicR/blob/master/images/logo.png" width=200 alt="TrophicR Logo"/>
 </a>
@@ -13,7 +16,7 @@
 **trophicR** is an R package to facilitate model-fitting of functional
 responses (trophic interactions) using a Bayesian approach with [Stan](http://mc-stan.org) (via the **rstan** package).
 
-**trophicR** is deeply inspired by the [rstanarm](https://github.com/stan-dev/rstanarm) package.
+The way I'm developping **trophicR** is deeply inspired by the [rstanarm](https://github.com/stan-dev/rstanarm) package.
 
 ## Installation
 
