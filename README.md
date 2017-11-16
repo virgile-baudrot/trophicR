@@ -1,4 +1,4 @@
-[![In progress]](http://i.stack.imgur.com/kmfPT.png)
+![In progress](http://i.stack.imgur.com/kmfPT.png)
 Work in progress, the package not ready for release.
 
 <a href="https://github.com/virgile-baudrot/trophicR">
