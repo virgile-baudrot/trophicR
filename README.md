@@ -1,3 +1,6 @@
+[![In progress]](http://i.stack.imgur.com/kmfPT.png)
+Work in progress, the package not ready for release.
+
 <a href="https://github.com/virgile-baudrot/trophicR">
 <img src="https://github.com/virgile-baudrot/trophicR/blob/master/images/logo.png" width=200 alt="TrophicR Logo"/>
 </a>
