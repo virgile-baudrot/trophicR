@@ -1,7 +1,7 @@
 Package: trophicR
 Type: Package
 Title: Bayesian Modeling of Trophic Interactions via Stan
-Version: 1.0
+Version: 0.1.0
 Date: 2017-08-02
 Author: Virgile Baudrot [aut]
 Maintainer: Virgile Baudrot <virgile.baudrot@posteo.net>
