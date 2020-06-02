@@ -1,7 +1,4 @@
-![In progress](https://github.com/virgile-baudrot/trophicR/blob/master/images/work-in-progress_30.png)
-
-
-Work in progress, the package isnot ready for release.
+> **Work in progress, the package is not ready for release.**
 
 
 
